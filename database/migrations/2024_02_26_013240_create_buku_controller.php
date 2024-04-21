@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('penulis');
             $table->string('foto');
             $table->string('penerbit');
+            $table->string('kategori')->nullable(true);
             $table->integer('tahun_terbit');
             $table->boolean('status')->default(true);
             $table->timestamps();
