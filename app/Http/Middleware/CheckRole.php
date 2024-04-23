@@ -14,15 +14,18 @@ class CheckRole
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
-    {
-        // Check if the user's role matches any of the specified roles
+{
+    // Check if the user is authenticated and if the user's role matches any of the specified roles
+    if (auth()->check()) {
         $userRole = auth()->user()->role;
 
-        if (in_array($userRole, $roles)) {
+        if ($userRole !== null && in_array($userRole, $roles)) {
             return $next($request);
         }
-
-        // If the user's role does not match, redirect to the home page
-        return redirect('/');
     }
+
+    // If the user is not authenticated or the role is null or does not match, redirect to the home page
+    return redirect('/login');
+}
+
 }

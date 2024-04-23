@@ -30,6 +30,7 @@ https://templatemo.com/tm-556-catalog-z
                 <i class="fas fa-film mr-2"></i>
                 Library
             </a>
+            
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
@@ -81,9 +82,19 @@ https://templatemo.com/tm-556-catalog-z
                 Library
             </h2>
         </div>
+        <div class="col-6">
+            <select id="categoryFilter" class="form-control">
+                <option value="all">All Categories</option>
+                @foreach ($data->unique('kategori') as $item)
+                <option value="{{ $item->kategori }}">{{ $item->kategori }}</option>
+                {{-- <option value="fiksi">Fiksi</option> --}}
+                @endforeach
+                <!-- Add more options for each category -->
+            </select>
+        </div><br>
         <div class="row tm-mb-90 tm-gallery">
             @foreach ($data as $item)
-        	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
+        	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5" data-category="{{ $item->kategori }}">
                 <figure class="effect-ming tm-video-item">
                     <img src="{{asset('img/'.$item->foto)}}" alt="Image" class="img-fluid">
                     <figcaption class="d-flex align-items-center justify-content-center">
@@ -145,5 +156,23 @@ https://templatemo.com/tm-556-catalog-z
             $('body').addClass('loaded');
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            // Event listener for category filter change
+            $('#categoryFilter').change(function() {
+                var selectedCategory = $(this).val();
+    
+                // Show all items if "All Categories" is selected
+                if (selectedCategory === 'all') {
+                    $('.tm-gallery .col-xl-3').show();
+                } else {
+                    // Hide all items and show only items with the selected category
+                    $('.tm-gallery .col-xl-3').hide();
+                    $('.tm-gallery .col-xl-3[data-category="' + selectedCategory + '"]').show();
+                }
+            });
+        });
+    </script>
+    
 </body>
 </html>

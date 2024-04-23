@@ -30,8 +30,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/', [PeminjamanController::class, 'index'])->name('');
 // Route::get('/index', function () {return view('index');});
 
-Route::get('/admin', function () { return view('admin'); })->middleware('checkRole:admin');
-Route::get('/petugas', function () { return view('petugas'); })->middleware('checkRole:petugas');
+Route::get('/admin', function () { return view('admin'); })->middleware('checkRole:admin, petugas');
+Route::get('/petugasss', function () { return view('petugas'); })->middleware('checkRole:petugas');
 Route::resource('buku', BukuController::class)->middleware('checkRole:admin,petugas');
 Route::resource('pinjam', PeminjamanController::class)->middleware('checkRole:peminjam');
 Route::resource('ulasan', UlasanController::class)->middleware('checkRole:peminjam');
