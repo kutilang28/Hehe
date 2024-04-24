@@ -80,8 +80,9 @@ https://templatemo.com/tm-556-catalog-z
             <label for="kategoriSelect">Filter by Category:</label>
             <select id="kategoriSelect" class="form-control">
                 <option value="all">All</option>
-                <option value="fiksi">Fiksi</option>
-                <option value="romance">Romance</option>
+                @foreach ($kategori as $item)
+                <option value="{{ $item->nama_kategori }}">{{ $item->nama_kategori }}</option>
+                @endforeach
                 <!-- Add more options for each category -->
             </select>
         </div>
@@ -110,7 +111,12 @@ https://templatemo.com/tm-556-catalog-z
                                     <td>{{ $book->penulis }}</td>
                                     <td>{{ $book->penerbit }}</td>
                                     <td>{{ $book->tahun_terbit }}</td>
-                                    <td>{{ $book->kategori }}</td>
+                                    <td>
+                                        @php
+                                            $kategori = \App\Models\Kategori::find($book->kategori_id);
+                                        @endphp
+                                        {{ $kategori ? $kategori->nama_kategori : 'No Category' }}
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -169,14 +175,14 @@ https://templatemo.com/tm-556-catalog-z
         document.addEventListener("DOMContentLoaded", function() {
             const kategoriSelect = document.getElementById('kategoriSelect');
             const rows = document.querySelectorAll('.table tbody tr');
-    
+
             kategoriSelect.addEventListener('change', function() {
                 const selectedCategory = this.value;
-    
+
                 rows.forEach(function(row) {
                     const categoryCell = row.querySelector('td:last-child');
                     const category = categoryCell.textContent.trim();
-    
+
                     if (selectedCategory === 'all' || category === selectedCategory) {
                         row.style.display = 'table-row'; // Show the row if it matches the selected category or if 'All' is selected
                     } else {
@@ -186,7 +192,7 @@ https://templatemo.com/tm-556-catalog-z
             });
         });
     </script>
-    
-    
+
+
 </body>
 </html>

@@ -8,14 +8,14 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Data Barang</h1>
+                    <h1 class="m-0">Data Kategori</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Bordered Table</h3>
                     <div class="card-tools">
-                        <a href="{{route('buku.create')}}" class="btn btn-success">Tambah Buku <i class="fas fa-plus-square"></i></a>
+                        <a href="{{route('kategori.create')}}" class="btn btn-success">Tambah Kategori <i class="fas fa-plus-square"></i></a>
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -34,38 +34,18 @@
                         <table class="table table-bordered">
                             <thead>
                             <tr>
-                                <th style="width: 10px">id buku</th>
-                                <th>Judul Buku</th>
-                                <th>Foto Buku</th>
-                                <th>Penulis</th>
-                                <th>Judul</th>
-                                <th>Penerbit</th>
-                                <th>Tahun Terbit</th>
-                                <th>Kategori</th>
-                                <th>Action</th>
+                                <th style="width: 10px">ID Kategori</th>
+                                <th>Nama Kategori</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach ($data as $item)
                                 <tr>
                                     <td>{{$item -> id}}</td>
-                                    <td>{{$item -> judul}}</td>
+                                    <td>{{$item->nama_kategori}}</td>
                                     <td>
-                                        <img src="{{asset('img/'.$item->foto)}}" width="100px">
-                                    </td>
-                                    <td>{{$item -> penulis}}</td>
-                                    <td>{{$item -> judul}}</td>
-                                    <td>{{$item -> penerbit}}</td>
-                                    <td>{{$item -> tahun_terbit}}</td>
-                                    <td>
-                                        @php
-                                            $kategori = \App\Models\Kategori::find($item->kategori_id);
-                                        @endphp
-                                        {{ $kategori ? $kategori->nama_kategori : 'No Category' }}
-                                    </td>
-                                    <td>
-                                        <form action="{{ route('buku.destroy', $item->id)  }}" method="POST">
-                                            <a class="btn btn-warning" href="{{route('buku.edit', $item->id)}}">Edit</a>
+                                        <form action="{{ route('kategori.destroy', $item->id)  }}" method="POST">
+                                            <a class="btn btn-warning" href="{{route('kategori.edit', $item->id)}}">Edit</a>
                                             @csrf
                                             @method('delete')
                                             <button class="btn btn-danger btn-sm">Hapus</button>

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('penerbit');
             $table->string('kategori')->nullable(true);
             $table->integer('tahun_terbit');
+            $table->foreignId('kategori_id')->constrained();
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

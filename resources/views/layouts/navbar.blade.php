@@ -10,7 +10,7 @@
           <a href="/admin" class="nav-link">Home</a>
           @endif
           @if (Auth::user()->role == 'petugas')
-          <a href="/petugas" class="nav-link">Home</a>
+          <a href="/petugasss" class="nav-link">Home</a>
           @endif
           @if (Auth::user()->role == 'peminjam')
           <a href="/masyarakat" class="nav-link">Home</a>

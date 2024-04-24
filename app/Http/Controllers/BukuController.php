@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use App\Models\Buku;
 
@@ -26,7 +27,8 @@ class BukuController extends Controller
     public function create()
     {
         //
-        return view('buku.create');
+        $kategori = Kategori::all();
+        return view('buku.create', compact('kategori'));
     }
 
     /**
@@ -40,7 +42,7 @@ class BukuController extends Controller
         $item->penulis = $request->penulis;
         $item->penerbit = $request->penerbit;
         $item->tahun_terbit = $request->tahun_terbit;
-        $item->kategori = $request->kategori;
+        $item->kategori_id = $request->kategori;
         if ($request->hasFile('foto')) {
             $imageName = time().'.'.$request->foto->extension();
             $request->foto->move(public_path('img'), $imageName);
@@ -66,6 +68,7 @@ class BukuController extends Controller
         //
         return view('buku.edit')->with([
             'buku' => Buku::find($id),
+            'kategori' => Kategori::all(),
         ]);
     }
 

@@ -60,9 +60,9 @@
                   <div class="form-group">
                     <label for="kategori">Kategori</label>
                     <select name="kategori" id="kategori" class="form-control">
-                        <option value="fiksi">Fiksi</option>
-                        <option value="romance">Romance</option>
-                        <option value="futuristic">Futuristic</option>
+                        @foreach ($kategori as $item)
+                        <option value="{{$item->id}}">{{$item->nama_kategori}}</option>
+                        @endforeach
                     </select>
                   </div>
                 </div>

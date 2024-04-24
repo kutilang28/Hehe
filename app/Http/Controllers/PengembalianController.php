@@ -15,44 +15,42 @@ class PengembalianController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-        // Fetch all Peminjaman records associated with the authenticated user
-        $userId = auth()->user()->id;
+{
+    // Fetch all Peminjaman records associated with the authenticated user
+    $userId = auth()->user()->id;
 
-        // Fetch koleksi records associated with the user
-        $peminjamans = Peminjaman::where('user_id', $userId)->with('buku')->get();
+    // Fetch koleksi records associated with the user and sort by borrowing date in descending order
+    $peminjamans = Peminjaman::where('user_id', $userId)
+        ->with('buku')
+        ->orderByDesc('created_at')
+        ->get();
 
-        // Initialize an empty array to store books
-        $books = [];
+    // Initialize an empty array to store books
+    $books = [];
 
+    // Loop through each Peminjaman record
+    foreach ($peminjamans as $peminjaman) {
+        // Retrieve the book associated with the Peminjaman record
+        $book = $peminjaman->buku;
 
-
-        // Loop through each Peminjaman record
-        foreach ($peminjamans as $peminjaman) {
-            // Retrieve the book associated with the Peminjaman record
-            $book = $peminjaman->buku;
-
-            // Add the book to the books array if it's not null
-            if ($book) {
-                $books[] = $book;
-            }
+        // Add the book to the books array if it's not null
+        if ($book) {
+            $books[] = $book;
         }
-
-        foreach ($peminjamans as $peminjaman) {
-            // Check if tanggal_pengembalian is today
-            if (Carbon::parse($peminjaman->tanggal_pengembalian)->isToday()) {
-                // Update status to "Dikembalikan"
-                $peminjaman->status = 'Dikembalikan';
-                $peminjaman->save();
-            }
-        }
-
-        // dd($books); // Uncomment this line for debugging
-
-        // Pass the data to the view
-        return view('pinjam.pengembalian', compact('books', 'peminjamans'));
     }
+
+    foreach ($peminjamans as $peminjaman) {
+        // Check if tanggal_pengembalian is today
+        if (Carbon::parse($peminjaman->tanggal_pengembalian)->isToday()) {
+            // Update status to "Dikembalikan"
+            $peminjaman->status = 'Dikembalikan';
+            $peminjaman->save();
+        }
+    }
+
+    // Pass the data to the view
+    return view('pinjam.pengembalian', compact('books', 'peminjamans'));
+}
 
     /**
      * Show the form for creating a new resource.
@@ -68,11 +66,21 @@ class PengembalianController extends Controller
     public function store(Request $request)
     {
         //
-        $borrowing = Peminjaman::findOrFail($request->input('return_id'));
-        $borrowing->tanggal_pengembalian = Carbon::now();
-        $borrowing->status  = "Dikembalikan";
-        $borrowing->save();
-        return redirect()->back()->with('success', 'Book returned successfully.');
+    // Find the Peminjaman record by its ID
+    $borrowing = Peminjaman::findOrFail($request->input('return_id'));
+
+    // Update the tanggal_pengembalian and status fields
+    $borrowing->tanggal_pengembalian = Carbon::now();
+    $borrowing->status = 'Dikembalikan';
+    $borrowing->save();
+
+    // Get the associated book and update its status
+    $book = Buku::findOrFail($borrowing->buku_id);
+    $book->status = 1; // Assuming "1" represents the returned status
+    $book->save();
+
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'Book returned successfully.');
     }
 
     /**

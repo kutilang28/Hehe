@@ -30,7 +30,7 @@ https://templatemo.com/tm-556-catalog-z
                 <i class="fas fa-film mr-2"></i>
                 Library
             </a>
-            
+
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
@@ -74,7 +74,7 @@ https://templatemo.com/tm-556-catalog-z
 
     <div class="tm-hero d-flex justify-content-center align-items-center" data-parallax="scroll" data-image-src="{{asset('Templates')}}/img/liba.jpg">
     </div>
-    
+
 
     <div class="container-fluid tm-container-content tm-mt-60">
         <div class="row mb-4">
@@ -85,8 +85,8 @@ https://templatemo.com/tm-556-catalog-z
         <div class="col-6">
             <select id="categoryFilter" class="form-control">
                 <option value="all">All Categories</option>
-                @foreach ($data->unique('kategori') as $item)
-                <option value="{{ $item->kategori }}">{{ $item->kategori }}</option>
+                @foreach ($kategori as $item)
+                <option value="{{ $item->id }}">{{ $item->nama_kategori }}</option>
                 {{-- <option value="fiksi">Fiksi</option> --}}
                 @endforeach
                 <!-- Add more options for each category -->
@@ -94,18 +94,26 @@ https://templatemo.com/tm-556-catalog-z
         </div><br>
         <div class="row tm-mb-90 tm-gallery">
             @foreach ($data as $item)
-        	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5" data-category="{{ $item->kategori }}">
+        	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5" data-category="{{ $item->kategori_id }}">
                 <figure class="effect-ming tm-video-item">
                     <img src="{{asset('img/'.$item->foto)}}" alt="Image" class="img-fluid">
                     <figcaption class="d-flex align-items-center justify-content-center">
-                        <h2>{{ $item->judul }}</h2>
+                        <h2>{{ $item->judul }} <br> @if($item->status == 1)
+                            (Available)
+                        @else
+                            (Not Available)
+                        @endif</h2>
                         <a href="{{ route('pinjam.show', $item->id) }}">View more</a>
                     </figcaption>
                 </figure>
                 <div class="d-flex justify-content-between tm-text-gray">
                     <span class="tm-text-gray-light">{{ $item->tahun_terbit }}</span>
                     <span>{{ $item->penulis }}</span>
-                    <span>{{ $item->kategori }}</span>
+
+                    <span >@php
+                        $kategori = \App\Models\Kategori::find($item->kategori_id);
+                    @endphp
+                    {{ $kategori ? $kategori->nama_kategori : 'No Category' }}</span>
                 </div>
             </div>
             @endforeach
@@ -161,7 +169,7 @@ https://templatemo.com/tm-556-catalog-z
             // Event listener for category filter change
             $('#categoryFilter').change(function() {
                 var selectedCategory = $(this).val();
-    
+
                 // Show all items if "All Categories" is selected
                 if (selectedCategory === 'all') {
                     $('.tm-gallery .col-xl-3').show();
@@ -173,6 +181,6 @@ https://templatemo.com/tm-556-catalog-z
             });
         });
     </script>
-    
+
 </body>
 </html>

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Buku;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
-use App\Models\Buku;
-use App\Models\Koleksi;
 
-class KoleksiController extends Controller
+class KategoriController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,32 +14,10 @@ class KoleksiController extends Controller
     public function index()
     {
         //
-        // Get the authenticated user's ID
-        $userId = auth()->user()->id;
-
-        // Fetch koleksi records associated with the user
-        $items = Koleksi::where('user_id', $userId)->with('buku')->get();
-
-        // Initialize an empty array to store books
-        $books = [];
-
-        // Loop through each koleksi record
-        foreach ($items as $item) {
-            // Extract the buku_id
-            $bookId = $item->buku_id;
-            // Fetch the corresponding book using the buku_id
-            $book = Buku::find($bookId);
-            // Add the book to the books array
-            if ($book) {
-                $books[] = $book;
-            }
-        }
-        // dd($books);
-
-        $kategori = Kategori::all();
-
-        // Pass the books data to the view
-        return view('pinjam.koleksi', compact('books', 'kategori'));
+        $data = Kategori::all();
+        return view('kategori.index', compact('data'))->with([
+            '' => Kategori::all(),
+            ]);
     }
 
     /**
@@ -49,6 +26,7 @@ class KoleksiController extends Controller
     public function create()
     {
         //
+        return view('kategori.create');
     }
 
     /**
@@ -57,6 +35,12 @@ class KoleksiController extends Controller
     public function store(Request $request)
     {
         //
+
+        $kategori = new Kategori;
+        $kategori->nama_kategori = $request->nama_kategori;
+        $kategori->save();
+
+        return redirect()->route('kategori.index')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     /**
@@ -64,7 +48,6 @@ class KoleksiController extends Controller
      */
     public function show(string $id)
     {
-        //
     }
 
     /**
@@ -73,6 +56,8 @@ class KoleksiController extends Controller
     public function edit(string $id)
     {
         //
+        $data = Kategori::findOrFail($id);
+        return view('kategori.edit', compact('data'));
     }
 
     /**
@@ -80,7 +65,10 @@ class KoleksiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = Kategori::findOrFail($id);
+        $data->nama_kategori = $request->nama_kategori;
+        $data->save();
+        return redirect()->route('kategori.index')->with('success', 'Data Berhasil Diubah');
     }
 
     /**
@@ -89,5 +77,8 @@ class KoleksiController extends Controller
     public function destroy(string $id)
     {
         //
+        $data = Kategori::findOrFail($id);
+        $data->delete();
+        return redirect()->route('kategori.index')->with('success', 'Data Berhasil Dihapus');
     }
 }

@@ -78,8 +78,8 @@ https://templatemo.com/tm-556-catalog-z
             <h2 class="col-12 tm-text-primary">{{ $item->judul }}</h2>
         </div>
         <div class="row tm-mb-90">
-            <div class="col-xl-8 col-lg-7 col-md-6 col-sm-12">
-                <img src="{{asset('img/'.$item->foto)}}" alt="Image" class="img-fluid">
+            <div class="col-xl-8 col-lg-7 col-md-6 col-sm-12 mx-auto mb-4">
+                <img src="{{asset('img/'.$item->foto)}}" alt="Image" class="img-fluid d-block mx-auto">
             </div>
             <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
                 <div class="tm-bg-gray tm-video-details">
@@ -148,7 +148,13 @@ https://templatemo.com/tm-556-catalog-z
                                 <tr>
                                     <td>{{ $review->user->name }}</td>
                                     <td>{{ $review->ulasan }}</td>
-                                    <td>{{ $review->rating }}</td>
+                                    <td>
+                                        @php
+                                            $ratings = ['1' => 'Sangat Buruk', '2' => 'Buruk', '3' => 'Biasa', '4' => 'Baik', '5' => 'Sangat Baik'];
+                                            $ratingText = isset($ratings[$review->rating]) ? $ratings[$review->rating] : 'Unknown';
+                                        @endphp
+                                        {{ $ratingText }}
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

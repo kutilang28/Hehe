@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use App\Models\Buku;
 use App\Models\Koleksi;
@@ -19,7 +20,8 @@ class PeminjamanController extends Controller
     {
         //
         $data = Buku::all();
-        return view('index', compact('data'))->with([
+        $kategori = Kategori::all();
+        return view('index', compact('data', 'kategori'))->with([
             '' => Buku::all(),
             ]);
     }
@@ -47,9 +49,7 @@ class PeminjamanController extends Controller
             return redirect()->back()->with('error', 'Book is not available for borrowing.');
         }
 
-        // if ($user->peminjaman()->count() >= 5) {
-        //     return redirect()->back()->with('error', 'You have reached the maximum borrowing limit.');
-        // }
+
 
         Peminjaman::create([
             'user_id' => $user->id,
@@ -57,22 +57,23 @@ class PeminjamanController extends Controller
             'tanggal_peminjaman' => Carbon::now(),
             'tanggal_pengembalian' => Carbon::now()->addDays(7),
             'status' => 'dipinjam',
-        ]);
+        ]);//membuat peminjaman sesuai user dah buku yang dipilih
         $existingKoleksi = Koleksi::where('user_id', $user->id)
                             ->where('buku_id', $bookId)
-                            ->first();
+                            ->first();//memilih buku ke koleksi user
 
         if (!$existingKoleksi) {
             Koleksi::create([
                 'user_id' => $user->id,
                 'buku_id' => $bookId,
             ]);
-        }
+        }//memasukkan buku ke koleksi user
 
+        $book->status = '0';
         // dd($book);
-        $book->save();
+        $book->update();
 
-        return redirect()->back()->with('success', 'Book borrowed successfully.');
+        return redirect()->back()->with('success', 'Book borrowed successfully, please return before 7 days');
     }
 
     /**
@@ -84,7 +85,7 @@ class PeminjamanController extends Controller
         $buku = Buku::all();
         $item = Buku::findOrFail($id);
         $ulasan = Ulasan::where('buku_id', $id)->with('buku')->get();
-        // dd($ulasan);
+        //memilih buku
         return view('pinjam.pinjam', compact('item', 'buku', 'ulasan'));
     }
 

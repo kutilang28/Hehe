@@ -8,6 +8,7 @@ use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\KoleksiController;
 use App\Http\Controllers\HistoriController;
+use App\Http\Controllers\KategoriController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,7 @@ Route::get('/', [PeminjamanController::class, 'index'])->name('');
 Route::get('/admin', function () { return view('admin'); })->middleware('checkRole:admin, petugas');
 Route::get('/petugasss', function () { return view('petugas'); })->middleware('checkRole:petugas');
 Route::resource('buku', BukuController::class)->middleware('checkRole:admin,petugas');
+Route::resource('kategori', KategoriController::class)->middleware('checkRole:admin,petugas');
 Route::resource('pinjam', PeminjamanController::class)->middleware('checkRole:peminjam');
 Route::resource('ulasan', UlasanController::class)->middleware('checkRole:peminjam');
 Route::resource('kembali', PengembalianController::class)->middleware('checkRole:peminjam');

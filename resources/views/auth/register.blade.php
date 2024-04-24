@@ -61,7 +61,7 @@
                                 <select id="role" class="form-select @error('role') is-invalid @enderror" name="role" required>
                                     <option value="" selected disabled>Select Role</option>
                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                                    <option value="petugas" {{ old('role') == 'petugas' ? 'selected' : '' }}>Petugas</option>
+                                    {{-- <option value="petugas" {{ old('role') == 'petugas' ? 'selected' : '' }}>Petugas</option> --}}
                                     <option value="peminjam" {{ old('role') == 'peminjam' ? 'selected' : '' }}>Peminjam</option>
                                 </select>
 

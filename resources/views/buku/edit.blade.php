@@ -60,6 +60,14 @@
                         <label for="tahun_terbit">Tahun Terbit</label>
                         <input type="number" name="tahun_terbit" id="tahun_terbit" class="form-control" value="{{ old('tahun_terbit', $buku->tahun_terbit) }}">
                     </div>
+                    <div class="form-group">
+                        <label for="kategori">Kategori</label>
+                        <select name="kategori" id="kategori" class="form-control">
+                            @foreach ($kategori as $item)
+                            <option value="{{$item->id}}">{{$item->nama_kategori}} </option>
+                            @endforeach
+                        </select>
+                      </div>
                 </div>
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary">Update</button>
